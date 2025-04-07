@@ -7,6 +7,7 @@ let audioBlob;
 
 // Select the button and status elements
 const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
 const statusText = document.getElementById('status');
 const audioPlayer = document.getElementById('audioPlayer');
 
@@ -77,4 +78,14 @@ async function startRecording() {
 // Start recording when the "Start Recording" button is clicked
 startBtn.addEventListener('click', () => {
     startRecording();
+    stopBtn.style.display = 'inline';  // Show stop button when recording starts
+});
+
+// Stop recording when the "Stop Recording" button is clicked
+stopBtn.addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();  // Stop recording
+        statusText.textContent = "Recording stopped manually.";
+        stopBtn.style.display = 'none';  // Hide the stop button
+    }
 });

@@ -27,24 +27,22 @@ async function startRecording() {
         // When recording stops, process the audio
         mediaRecorder.onstop = async () => {
             // Create a Blob from the audio chunks
-            audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
 
             // Log the blob size to debug
             console.log("Audio Blob size:", audioBlob.size);
 
-            // Convert the blob to an array buffer to send to the backend
-            const audioArrayBuffer = await audioBlob.arrayBuffer();
+            // Convert the blob to a FormData object
+            const formData = new FormData();
+            formData.append("file", audioBlob, "audio.webm");
 
             // Update status text
             statusText.textContent = "Sending audio to server...";
 
-            // Send the audio data to the backend API
+            // Send the audio data to the backend API using form-data
             const response = await fetch('https://es8znfwxkxbbih-8000.proxy.runpod.net/audio-conversation/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/octet-stream',
-                },
-                body: audioArrayBuffer,
+                body: formData, // Use form-data to send the file
             });
 
             // Handle the response from the backend
